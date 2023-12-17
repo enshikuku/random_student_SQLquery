@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>SQL Query Generator</h2>
+    
+    <label for="numRecords">Number of Records:</label>
+    <input type="number" id="numRecords" min="1" value="10">
+
+    <button onclick="generateQueries()">Generate Queries</button>
+
+    <textarea id="output" readonly></textarea>
+
+    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+
+    <script>
+        function generatePassword() {
+            const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+            let password = '';
+            for (let i = 0; i < 20; i++) {
+                password += characters[Math.floor(Math.random() * characters.length)];
+            }
+            return password;
+        }
+
+        function generateName() {
+            const names = [
+                "John Doe", "Jane Smith", "David Kimani", "Grace Mwangi", "Patrick Kariuki", "Emily Wanjiru",
+                "Brian Muthoni", "Alice Karanja", "Robert Gathoni", "Linda Muriuki", "Kevin Njoroge", "Mercy Nyambura",
+                "Michael Ndungu", "Sophia Njeri", "Daniel Gitau", "Catherine Wairimu", "Samuel Kariuki", "Eunice Muthoni",
+                "Alex Kimemia", "Carol Wangui", "George Karanja", "Lydia Njeri", "Nicholas Mwangi", "Priscilla Chege",
+                "Peter Kamau", "Susan Wanjiku", "Andrew Mugo", "Joyce Gathoni", "Frankline Waweru", "Esther Wambui",
+                "Kennedy Njuguna", "Melissa Wanjiru", "Timothy Muriuki", "Rebecca Wangari", "Paul Njoroge", "Stella Muthoni",
+                "Victor Maina", "Wendy Nyambura", "Collins Kariuki", "Diana Mwangi", "Dennis Ndungu", "Anne Wanjiru",
+                "Steve Gitau", "Eva Njeri", "Raymond Kariuki", "Valentine Muthoni", "Brian Njoroge", "Grace Nyambura",
+                "Kelvin Kimani", "Angela Wanjiku", "Philip Gathoni", "Nancy Muriuki", "Jeffrey Njoroge", "Faith Nyambura",
+                "Vincent Karanja", "Brenda Muthoni", "Collins Njenga", "Prudence Wanjiru", "Duncan Maina", "Lilian Nyambura",
+                "Benjamin Mwangi", "Mercy Wambui", "Anthony Njuguna", "Hellen Wanjiku", "Joshua Kariuki", "Caroline Muthoni",
+                "Charles Njoroge", "Gladys Nyambura", "Lucas Gitau", "Rose Wangari", "Mark Muriuki", "Evelyn Wanjiru",
+                "Peter Muthoni", "Christine Nyambura", "Jackson Kimani", "Deborah Njeri", "Kenneth Kariuki", "Esther Mwangi",
+                "David Muthoni", "Lilian Kariuki", "Brian Njeri", "Joy Mwangi", "Patrick Njoroge", "Pamela Nyambura",
+                "Joseph Karanja", "Cynthia Wanjiru", "Isaac Njoroge", "Julia Muthoni", "Samuel Nyambura", "Tabitha Wanjiku",
+                "Gilbert Muriuki", "Priscilla Wangari", "Felix Njoroge", "Mabel Nyambura", "Martin Kimani", "Sophie Wanjiru",
+                "Simon Muthoni", "Vivian Nyambura", "Winston Kariuki", "Dorcas Wanjiku", "Aaron Njoroge", "Beryl Mwangi",
+                "Victor Gitau", "Janet Muthoni", "Collins Njeri", "Ruth Wambui", "Isaiah Njoroge", "Monica Nyambura",
+                "Elijah Karanja", "Linda Muthoni", "Stephen Mwangi", "Sharon Wanjiru", "Kennedy Njoroge", "Martha Nyambura",
+                "Gabriel Kariuki", "Hannah Wambui", "Ezekiel Njoroge", "Judith Muthoni", "Johnson Mwangi", "Emily Nyambura",
+                "Francis Kimani", "Violet Wanjiku", "Samuel Gitau", "Catherine Muthoni", "Larry Njoroge", "Daisy Nyambura",
+                "Philip Muriuki", "Faith Wanjiru", "Erick Karanja", "Lillian Njeri", "Kelvin Gathoni", "Caroline Muriuki",
+                "Walter Nyambura", "Lydia Kariuki", "Nelson Njoroge", "Mercy Wangari", "Gregory Muthoni", "Sandra Nyambura",
+                "Peter Kariuki", "Michelle Wanjiru", "Dennis Gitau", "Grace Muthoni", "Martin Njoroge", "Lucy Nyambura",
+                "Benard Kimani", "Esther Wanjiku", "Johnson Gathoni", "Lilian Njeri", "Alex Kariuki", "Hellen Nyambura",
+                "Anthony Muthoni", "Valerie Wanjiru", "George Gitau", "Pamela Muriuki", "Christopher Njoroge", "Eva Nyambura",
+                "Daniel Kariuki", "Sophie Muthoni", "Andrew Njoroge", "Joy Nyambura", "Patrick Gitau", "Alice Wanjiru",
+                "Timothy Karanja", "Diana Nyambura", "Brian Muriuki", "Janet Nyambura", "Mark Njoroge", "Esther Nyambura"
+            ]
+
+
+            return names[Math.floor(Math.random() * names.length)]
+        }
+
+        function generateEmail(name) {
+            const nameParts = name.toLowerCase().split(' ')
+            const email = `${nameParts[0]}.${nameParts[1]}@example.com`
+            return email
+        }
+
+        function generateQueries() {
+            const numRecords = parseInt(document.getElementById('numRecords').value, 10)
+            let queries = 'INSERT INTO e_student (email, name, password, learn, gender, profilePic, isactive) VALUES\n'
+
+            for (let i = 0; i < numRecords; i++) {
+                const name = generateName()
+                const email = generateEmail(name)
+                const password = generatePassword()
+
+                queries += `('${email}', '${name}', '${password}', ${Math.floor(Math.random() * 61) + 40}, '${Math.random() < 0.5 ? 'Male' : 'Female'}', 'user.png', 'active'),\n`
+            }
+
+            // Remove the trailing comma and newline
+            queries = queries.slice(0, -2)
+
+            document.getElementById('output').value = queries
+        }
+
+        function copyToClipboard() {
+            const outputTextArea = document.getElementById('output')
+            outputTextArea.select()
+            document.execCommand('copy')
+            alert('Queries copied to clipboard!')
+        }
+    </script>
+</body>
+</html>
