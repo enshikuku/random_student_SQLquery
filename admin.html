@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f8f8f8; /* Lighter background color for better readability */
+            color: #333;
+        }
+
+        h2 {
+            color: #900020; /* Updated heading color */
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            background-color: #900020; /* Updated button color */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #700016; /* Darker shade on hover */
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-top: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button.copy {
+            margin-top: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button.copy:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h2>e_admininfo SQL Query Generator</h2>
+    
+    <label for="numRecords">Number of Records:</label>
+    <input type="number" id="numRecords" min="1" value="10">
+
+    <button onclick="generateAdminQueries()">Generate Queries</button>
+
+    <textarea id="output" readonly></textarea>
+
+    <button class="copy" onclick="copyToClipboard()">Copy to Clipboard</button>
+
+    <script>
+        function generatePassword() {
+            const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+            let password = '';
+            for (let i = 0; i < 20; i++) {
+                password += characters[Math.floor(Math.random() * characters.length)];
+            }
+            return password;
+        }
+
+        function generateTitle() {
+            const titles = ["Mr.", "Mrs.", "Ms.", "Miss", "Dr.", "Professor", "Sir", "Madam"];
+            return titles[Math.floor(Math.random() * titles.length)];
+        }
+
+        function generateSurname() {
+            const surnames = [
+                "Smith", "Johnson", "Williams", "Jones", "Brown", "Davis",
+                "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas",
+                "Jackson", "White", "Harris", "Martin", "Thompson", "García",
+                "Martínez", "Robinson", "Clark", "Rodríguez", "Lewis", "Lee"
+            ];
+            return surnames[Math.floor(Math.random() * surnames.length)];
+        }
+
+        function generateEmail(firstName, surname) {
+            const email = `${firstName.toLowerCase()}.${surname.toLowerCase()}@example.com`;
+            return email;
+        }
+
+        function generateAdminQueries() {
+            const numRecords = parseInt(document.getElementById('numRecords').value, 10);
+            let queries = 'INSERT INTO e_admininfo (name, email, password, isactive) VALUES\n';
+
+            for (let i = 0; i < numRecords; i++) {
+                const title = generateTitle();
+                const surname = generateSurname();
+                const firstName = generateTitle() === "Sir" || generateTitle() === "Madam" ? "" : generateTitle();
+                const fullName = firstName ? `${title} ${surname}` : surname;
+                const email = generateEmail(firstName, surname);
+                const password = generatePassword();
+
+                queries += `('${fullName}', '${email}', '${password}', 'active'),\n`;
+            }
+
+            // Remove the trailing comma and newline
+            queries = queries.slice(0, -2);
+
+            document.getElementById('output').value = queries;
+        }
+
+        function copyToClipboard() {
+            const outputTextArea = document.getElementById('output');
+            outputTextArea.select();
+            document.execCommand('copy');
+            alert('Queries copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
